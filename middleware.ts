@@ -4,14 +4,16 @@ import { Context } from "./context.ts";
 
 /** Middleware are functions which are chained together to deal with requests. */
 export interface Middleware<
-  T extends Context
+  T extends Context = Context<any>,
+  S extends object = { [key: string]: any }
 > {
   (context: T, next: () => Promise<void>): Promise<void> | void;
 }
 
 /** Compose multiple middleware functions into a single middleware function. */
 export function compose<
-  T extends Context
+  T extends Context = Context<any>,
+  S extends object = { [key: string]: any }
 >(middleware: Middleware<T>[]): (context: T) => Promise<void> {
   return function composedMiddleware(context: T, next?: () => Promise<void>) {
     let index = -1;

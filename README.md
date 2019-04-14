@@ -1,6 +1,7 @@
 # oak
 
-[![][tci badge]][tci link]
+[![][tci badge]][tci link] ![deno version](https://img.shields.io/badge/requires%20deno-v0.3.7-brightgreen.svg) ![deno_std version](https://img.shields.io/badge/uses%20deno__std-v0.3.4-brightgreen.svg)
+
 
 A middleware framework for Deno's
 [net](https://github.com/denoland/deno_std/tree/master/net#net) server,
@@ -282,5 +283,5 @@ including those directly adapted are licensed under the MIT License.
 All additional work is copyright 2018 - 2019 the oak authors. All rights
 reserved.
 
-[tci badge]: https://travis-ci.com/oakserver/oak.svg?branch=master
-[tci link]: https://travis-ci.com/oakserver/oak
+[tci badge]: https://travis-ci.com/liangchunn/oak.svg?branch=master
+[tci link]: https://travis-ci.com/liangchunn/oak
