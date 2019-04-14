@@ -1,6 +1,7 @@
 // Copyright 2018-2019 the oak authors. All rights reserved. MIT license.
 
-import { test, assert } from "https://deno.land/x/std/testing/mod.ts";
+import { test } from "https://deno.land/std@v0.3.4/testing/mod.ts";
+import { equal, assertStrictEq } from "https://deno.land/std@v0.3.4/testing/asserts.ts";
 import {
   Key,
   ParseOptions,
@@ -304,16 +305,16 @@ for (const { name, source, fixtures, keys, options } of testFixtures) {
       const actualKeys: Key[] = [];
       const re = pathToRegExp(source, actualKeys, options);
       if (keys) {
-        assert.equal(actualKeys, keys);
+        equal(actualKeys, keys);
       } else {
-        assert.equal(actualKeys.length, 0);
+        equal(actualKeys.length, 0);
       }
       for (const [fixture, expected] of Object.entries(fixtures)) {
         const actual = re.exec(fixture);
         if (!actual) {
-          assert.strictEqual(expected, null, "Expected a match.");
+          assertStrictEq(expected, null, "Expected a match.");
         } else {
-          assert.equal([...actual], expected);
+          equal([...actual], expected);
         }
       }
     }

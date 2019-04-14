@@ -1,6 +1,7 @@
 // Copyright 2018-2019 the oak authors. All rights reserved. MIT license.
 
-import { test, assert } from "https://deno.land/x/std/testing/mod.ts";
+import { test } from "https://deno.land/std@v0.3.4/testing/mod.ts";
+import { equal, assertStrictEq } from "https://deno.land/std@v0.3.4/testing/asserts.ts";
 import { Context } from "./context.ts";
 import { Status } from "./deps.ts";
 import { compose, Middleware } from "./middleware.ts";
@@ -29,17 +30,17 @@ test(async function testCompose() {
   const callStack: number[] = [];
   const mockContext = createMockContext();
   const mw1: Middleware = async (context, next) => {
-    assert.strictEqual(context, mockContext);
-    assert.equal(typeof next, "function");
+    assertStrictEq(context, mockContext);
+    equal(typeof next, "function");
     callStack.push(1);
     await next();
   };
   const mw2: Middleware = async (context, next) => {
-    assert.strictEqual(context, mockContext);
-    assert.equal(typeof next, "function");
+    assertStrictEq(context, mockContext);
+    equal(typeof next, "function");
     callStack.push(2);
     await next();
   };
   await compose([mw1, mw2])(mockContext);
-  assert.equal(callStack, [1, 2]);
+  equal(callStack, [1, 2]);
 });

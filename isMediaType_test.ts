@@ -1,136 +1,137 @@
 // Copyright 2018-2019 the oak authors. All rights reserved. MIT license.
 
-import { test, assert } from "https://deno.land/x/std/testing/mod.ts";
+import { test } from "https://deno.land/std@v0.3.4/testing/mod.ts";
+import { equal, assertStrictEq } from "https://deno.land/std@v0.3.4/testing/asserts.ts";
 import { isMediaType } from "./isMediaType.ts";
 
 test(function shouldIgnoreParams() {
   const actual = isMediaType("text/html; charset=utf-8", ["text/*"]);
-  assert.equal(actual, "text/html");
+  equal(actual, "text/html");
 });
 
 test(function shouldIgnoreParamsLWS() {
   const actual = isMediaType("text/html ; charset=utf-8", ["text/*"]);
-  assert.equal(actual, "text/html");
+  equal(actual, "text/html");
 });
 
 test(function shouldIgnoreCasing() {
   const actual = isMediaType("text/HTML", ["text/*"]);
-  assert.equal(actual, "text/html");
+  equal(actual, "text/html");
 });
 
 test(function shouldFailWithInvalidType() {
   const actual = isMediaType("text/html**", ["text/*"]);
-  assert.equal(actual, false);
+  equal(actual, false);
 });
 
 test(function returnsFalseWithInvalidTypes() {
-  assert.equal(isMediaType("text/html", ["text/html/"]), false);
+  equal(isMediaType("text/html", ["text/html/"]), false);
 });
 
 test(function noTypesGiven() {
-  assert.equal(isMediaType("image/png", []), "image/png");
+  equal(isMediaType("image/png", []), "image/png");
 });
 
 test(function typeOrFalse() {
-  assert.equal(isMediaType("image/png", ["png"]), "png");
-  assert.equal(isMediaType("image/png", [".png"]), ".png");
-  assert.equal(isMediaType("image/png", ["image/png"]), "image/png");
-  assert.equal(isMediaType("image/png", ["image/*"]), "image/png");
-  assert.equal(isMediaType("image/png", ["*/png"]), "image/png");
+  equal(isMediaType("image/png", ["png"]), "png");
+  equal(isMediaType("image/png", [".png"]), ".png");
+  equal(isMediaType("image/png", ["image/png"]), "image/png");
+  equal(isMediaType("image/png", ["image/*"]), "image/png");
+  equal(isMediaType("image/png", ["*/png"]), "image/png");
 
-  assert.equal(isMediaType("image/png", ["jpeg"]), false);
-  assert.equal(isMediaType("image/png", [".jpeg"]), false);
-  assert.equal(isMediaType("image/png", ["image/jpeg"]), false);
-  assert.equal(isMediaType("image/png", ["text/*"]), false);
-  assert.equal(isMediaType("image/png", ["*/jpeg"]), false);
+  equal(isMediaType("image/png", ["jpeg"]), false);
+  equal(isMediaType("image/png", [".jpeg"]), false);
+  equal(isMediaType("image/png", ["image/jpeg"]), false);
+  equal(isMediaType("image/png", ["text/*"]), false);
+  equal(isMediaType("image/png", ["*/jpeg"]), false);
 
-  assert.equal(isMediaType("image/png", ["bogus"]), false);
-  assert.equal(isMediaType("image/png", ["something/bogus*"]), false);
+  equal(isMediaType("image/png", ["bogus"]), false);
+  equal(isMediaType("image/png", ["something/bogus*"]), false);
 });
 
 test(function firstTypeOrFalse() {
-  assert.equal(isMediaType("image/png", ["png"]), "png");
-  assert.equal(isMediaType("image/png", [".png"]), ".png");
-  assert.equal(isMediaType("image/png", ["text/*", "image/*"]), "image/png");
-  assert.equal(isMediaType("image/png", ["image/*", "text/*"]), "image/png");
-  assert.equal(isMediaType("image/png", ["image/*", "image/png"]), "image/png");
-  assert.equal(isMediaType("image/png", ["image/png", "image/*"]), "image/png");
+  equal(isMediaType("image/png", ["png"]), "png");
+  equal(isMediaType("image/png", [".png"]), ".png");
+  equal(isMediaType("image/png", ["text/*", "image/*"]), "image/png");
+  equal(isMediaType("image/png", ["image/*", "text/*"]), "image/png");
+  equal(isMediaType("image/png", ["image/*", "image/png"]), "image/png");
+  equal(isMediaType("image/png", ["image/png", "image/*"]), "image/png");
 
-  assert.strictEqual(isMediaType("image/png", ["jpeg"]), false);
-  assert.strictEqual(isMediaType("image/png", [".jpeg"]), false);
-  assert.strictEqual(
+  assertStrictEq(isMediaType("image/png", ["jpeg"]), false);
+  assertStrictEq(isMediaType("image/png", [".jpeg"]), false);
+  assertStrictEq(
     isMediaType("image/png", ["text/*", "application/*"]),
     false
   );
-  assert.strictEqual(
+  assertStrictEq(
     isMediaType("image/png", ["text/html", "text/plain", "application/json"]),
     false
   );
 });
 
 test(function matchSuffix() {
-  assert.equal(
+  equal(
     isMediaType("application/vnd+json", ["+json"]),
     "application/vnd+json"
   );
-  assert.equal(
+  equal(
     isMediaType("application/vnd+json", ["application/vnd+json"]),
     "application/vnd+json"
   );
-  assert.equal(
+  equal(
     isMediaType("application/vnd+json", ["application/*+json"]),
     "application/vnd+json"
   );
-  assert.equal(
+  equal(
     isMediaType("application/vnd+json", ["*/vnd+json"]),
     "application/vnd+json"
   );
-  assert.strictEqual(
+  assertStrictEq(
     isMediaType("application/vnd+json", ["application/json"]),
     false
   );
-  assert.strictEqual(
+  assertStrictEq(
     isMediaType("application/vnd+json", ["text/*+json"]),
     false
   );
 });
 
 test(function starStarMatchesContentType() {
-  assert.equal(isMediaType("text/html", ["*/*"]), "text/html");
-  assert.equal(isMediaType("text/xml", ["*/*"]), "text/xml");
-  assert.equal(isMediaType("application/json", ["*/*"]), "application/json");
-  assert.equal(
+  equal(isMediaType("text/html", ["*/*"]), "text/html");
+  equal(isMediaType("text/xml", ["*/*"]), "text/xml");
+  equal(isMediaType("application/json", ["*/*"]), "application/json");
+  equal(
     isMediaType("application/vnd+json", ["*/*"]),
     "application/vnd+json"
   );
 });
 
 test(function starStarInvalidMTReturnsFalse() {
-  assert.strictEqual(isMediaType("bogus", ["*/*"]), false);
+  assertStrictEq(isMediaType("bogus", ["*/*"]), false);
 });
 
 test(function matchUrlEncoded() {
-  assert.equal(
+  equal(
     isMediaType("application/x-www-form-urlencoded", ["urlencoded"]),
     "urlencoded"
   );
-  assert.equal(
+  equal(
     isMediaType("application/x-www-form-urlencoded", ["json", "urlencoded"]),
     "urlencoded"
   );
-  assert.equal(
+  equal(
     isMediaType("application/x-www-form-urlencoded", ["urlencoded", "json"]),
     "urlencoded"
   );
 });
 
 test(function matchMultipartStar() {
-  assert.equal(
+  equal(
     isMediaType("multipart/form-data", ["multipart/*"]),
     "multipart/form-data"
   );
 });
 
 test(function matchMultipart() {
-  assert.equal(isMediaType("multipart/form-data", ["multipart"]), "multipart");
+  equal(isMediaType("multipart/form-data", ["multipart"]), "multipart");
 });

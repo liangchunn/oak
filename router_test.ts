@@ -1,6 +1,7 @@
 // Copyright 2018-2019 the oak authors. All rights reserved. MIT license.
 
-import { assert, test } from "https://deno.land/x/std/testing/mod.ts";
+import { test } from "https://deno.land/std@v0.3.4/testing/mod.ts";
+import { equal, assertStrictEq } from "https://deno.land/std@v0.3.4/testing/asserts.ts";
 import { Application } from "./application.ts";
 import { Context } from "./context.ts";
 import { Status } from "./deps.ts";
@@ -63,7 +64,7 @@ test(async function emptyRoutes() {
 
   const router = new Router();
   const mw = router.routes();
-  assert.equal(await mw(context, next), undefined);
+  equal(await mw(context, next), undefined);
 });
 
 test(async function getSingleMatch() {
@@ -72,13 +73,13 @@ test(async function getSingleMatch() {
   const callStack: number[] = [];
   const router = new Router();
   router.get("/", context => {
-    assert.strictEqual(context.router, router);
-    assert.strictEqual(context.app, app);
+    assertStrictEq(context.router, router);
+    assertStrictEq(context.app, app);
     callStack.push(1);
   });
   const mw = router.routes();
   await mw(context, next);
-  assert.equal(callStack, [1]);
+  equal(callStack, [1]);
 });
 
 test(async function matchSingleParam() {
@@ -94,11 +95,11 @@ test(async function matchSingleParam() {
   });
   router.get<{ id: string }>("/foo/:id", context => {
     callStack.push(3);
-    assert.equal(context.params.id, "bar");
+    equal(context.params.id, "bar");
   });
   const mw = router.routes();
   await mw(context, next);
-  assert.equal(callStack, [3]);
+  equal(callStack, [3]);
 });
 
 test(async function matchWithNext() {
@@ -121,7 +122,7 @@ test(async function matchWithNext() {
   });
   const mw = router.routes();
   await mw(context, next);
-  assert.equal(callStack, [2, 3]);
+  equal(callStack, [2, 3]);
 });
 
 test(async function matchDelete() {
@@ -156,7 +157,7 @@ test(async function matchDelete() {
   });
   const mw = router.routes();
   await mw(context, next);
-  assert.equal(callStack, [0, 1]);
+  equal(callStack, [0, 1]);
 });
 
 test(async function matchGet() {
@@ -191,7 +192,7 @@ test(async function matchGet() {
   });
   const mw = router.routes();
   await mw(context, next);
-  assert.equal(callStack, [0, 2]);
+  equal(callStack, [0, 2]);
 });
 
 test(async function matchHead() {
@@ -226,7 +227,7 @@ test(async function matchHead() {
   });
   const mw = router.routes();
   await mw(context, next);
-  assert.equal(callStack, [0, 3]);
+  equal(callStack, [0, 3]);
 });
 
 test(async function matchOptions() {
@@ -261,7 +262,7 @@ test(async function matchOptions() {
   });
   const mw = router.routes();
   await mw(context, next);
-  assert.equal(callStack, [4]);
+  equal(callStack, [4]);
 });
 
 test(async function matchPatch() {
@@ -296,7 +297,7 @@ test(async function matchPatch() {
   });
   const mw = router.routes();
   await mw(context, next);
-  assert.equal(callStack, [5]);
+  equal(callStack, [5]);
 });
 
 test(async function matchPost() {
@@ -331,7 +332,7 @@ test(async function matchPost() {
   });
   const mw = router.routes();
   await mw(context, next);
-  assert.equal(callStack, [0, 6]);
+  equal(callStack, [0, 6]);
 });
 
 test(async function matchPut() {
@@ -366,5 +367,5 @@ test(async function matchPut() {
   });
   const mw = router.routes();
   await mw(context, next);
-  assert.equal(callStack, [0, 7]);
+  equal(callStack, [0, 7]);
 });
